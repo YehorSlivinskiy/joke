@@ -10,6 +10,7 @@ let __dirname = path.dirname(__filename)
 let datapath = path.join(__dirname, "data")
 
 let server = http.createServer((req, res)=>{
+    res.setHeader("Access-Control-Allow-Origin", "*")
     if(req.url == "/jokes" && req.method == "GET"){
     getAllJokes(req, res)  
     }
@@ -20,7 +21,7 @@ let server = http.createServer((req, res)=>{
         like(req, res);
     }
     else if(req.url.startsWith("/dislike") && req.method == "GET"){
-        like(req, res);
+        dislike(req, res);
     }
     else{
         res.end("<h1>eheheheh</h1>")
@@ -49,8 +50,8 @@ function addNewJoke(req, res){
     })
     req.on("end", function(){
         let joke = JSON.parse(data)
-        joke.like = 0
-        joke.dislike = 0
+        joke.likes = 0
+        joke.dislikes = 0
         let dir = fs.readdirSync(datapath)
         let filename = dir.length + ".json"
         let filepath = path.join(datapath, filename)
